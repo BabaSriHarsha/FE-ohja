@@ -26,11 +26,11 @@
                 <input matInput type="text" formControlName="hobbies">
                 <mat-hint>Please enter the comma seperated values</mat-hint>
             </mat-form-field>
-            <!-- <mat-form-field>
-                <mat-label>Image</mat-label>
-                <input matInput type="text" formControlName="image">
-                <mat-hint>Supported format like jpg,png,jpeg,pdf</mat-hint>
-            </mat-form-field> -->
+            <div class="upload-container">
+                <button type="button" mat-raised-button (click)="fileInput.click()">Choose File</button>
+                <input hidden (change)="onFileSelected($event)" #fileInput type="file" accept=".jpg , .png, .pdf">
+                <span class="file-name">{{selectedFile?.name}}</span>
+            </div>
             <button mat-raised-button color="primary" type="submit" [disabled]="!employeeFrom.valid">Submit</button>
         </form>
         <div class="person-details" *ngIf="employee.length>0">

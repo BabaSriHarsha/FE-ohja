@@ -13,7 +13,7 @@ const routes: Routes = [
   {
     path: 'd',
     component: EmployeeDetailsComponent,
-    canActivate: [AuthGuard],
+    // canActivate: [AuthGuard],
   },
 ];
 

@@ -3,6 +3,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { DetailsSubmissionService } from '../shared/services/details-submission.service';
 import { MatTableDataSource } from '@angular/material/table';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-employee-details',
@@ -14,7 +15,8 @@ export class EmployeeDetailsComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private details: DetailsSubmissionService
+    private details: DetailsSubmissionService,
+    private sanitizer: DomSanitizer
   ) {
     this.createForm();
   }
@@ -29,13 +31,25 @@ export class EmployeeDetailsComponent implements OnInit {
     });
   }
 
+  selectedFile: any = null;
+  onFileSelected(event: any): void {
+    this.selectedFile = event.target.files[0] ?? null;
+    let url = this.sanitizer.bypassSecurityTrustUrl(
+      window.URL.createObjectURL(this.selectedFile)
+    );
+    console.log(this.selectedFile);
+  }
+
   employee: any = [];
+  message: any;
   onSubmit() {
+    let res = JSON.stringify(this.employeeFrom.value);
     this.details
-      .submitEmployeeDetails(this.employeeFrom.value)
-      .subscribe((data: any) => {
-        this.employee.push(data);
-      });
+      .uploadFile(this.selectedFile)
+      .subscribe((data: any) => console.log(`err`, data));
+    this.details.submitEmployeeDetails(res).subscribe((data: any) => {
+      console.log(`data.error`, data.error.text);
+    });
   }
 
   ngOnInit(): void {}
